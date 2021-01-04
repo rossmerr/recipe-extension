@@ -1,18 +1,13 @@
 <!DOCTYPE html>
 <head>
+    <link rel="stylesheet" href="mini-default.min.css">
 </head>
 <html>
   <body>
-    <p id="name">name</p>
-    <p id="category"></p>
-    <p id="cuisine"></p>
-    <p id="yield"></p>
-    <p id="prepTime"></p>
-    <p id="cookTime"></p>
-    <p id="description"></p>
-    <p id="ingredients"></p>
-    <p id="directions"></p>
-    <input type="submit" id="save" value="Save" disabled>
+    <h3>Recipe: <span id="name"></span></h3>
+    <button class="primary" id="save" disabled>Save</button>
+    <div id="spinner" class="spinner"></div>
+    <script src="duration.js"></script>
     <script src="sha1.js"></script>
     <script src="popup.js"></script>
   </body>
