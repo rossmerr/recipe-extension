@@ -14,30 +14,49 @@
     let linkData = document.querySelector('[type="application/ld+json"]');
     let hasLinkedDataRecipe = false;
     if (linkData !== null) {
-        let json = JSON.parse(linkData.innerText)
-        if (json !== undefined && json.length > 0) {
 
-            json.forEach(function (recipe) {
-                if (recipe['@type'] == 'Recipe') {
-                    hasLinkedDataRecipe = true;
-                    name = recipe.name;
-                    image = recipe.image?.url;
-                    video = recipe.video?.url;
-                    author = recipe.author?.name;
-                    recipeCategory = recipe.recipeCategory.join();
-                    recipeCuisine = recipe.recipeCuisine.join();
-                    yields = recipe.recipeYield;
-                    prepTime = recipe.prepTime;
-                    cookTime = recipe.cookTime;
-                    description = recipe.description;
-                    recipeIngredient = recipe.recipeIngredient;
-
-                    recipe.recipeInstructions.forEach(function (e) {
-                        recipeInstructions.push(e.text)
-                    });
-                }
-            });
+        if (!Array.isArray(linkData)) {
+            linkData = [linkData];
         }
+
+        linkData.forEach(function (data) {
+            let json = JSON.parse(data.innerText)
+
+            if (json !== undefined) {
+                if (!Array.isArray(json)) {
+                    json = [json];
+                }
+
+                json.forEach(function (recipe) {
+                    if (recipe['@type'] == 'Recipe') {
+                        hasLinkedDataRecipe = true;
+                        name = recipe.name;
+                        image = recipe.image?.url;
+                        video = recipe.video?.url;
+                        author = recipe.author?.name;
+                        if (Array.isArray(recipe.recipeCategory)) {
+                            recipeCategory = recipe.recipeCategory.join();
+                        } else {
+                            recipeCategory = recipe.recipeCategory;
+                        }
+                        if (Array.isArray(recipe.recipeCuisine)) {
+                            recipeCuisine = recipe.recipeCuisine?.join() ?? "";
+                        } else {
+                            recipeCuisine = recipe.recipeCuisine;
+                        }
+                        yields = recipe.recipeYield;
+                        prepTime = recipe.prepTime;
+                        cookTime = recipe.cookTime;
+                        description = recipe.description;
+                        recipeIngredient = recipe.recipeIngredient;
+
+                        recipe.recipeInstructions.forEach(function (e) {
+                            recipeInstructions.push(e.text ?? e)
+                        });
+                    }
+                });
+            }
+        });
     }
 
     let hasSchema = document.querySelector('[itemtype="http://schema.org/Recipe"]') !== null;

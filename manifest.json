@@ -1,5 +1,5 @@
 {
-  "name": "Recipe Schema Scraper",
+  "name": "Recipe Schema Scrapper",
   "version": "1.0",
   "description": "Downloads a recipe schema and commits it to Github as markdown.",
   "permissions": [
