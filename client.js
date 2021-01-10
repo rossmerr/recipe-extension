@@ -1,4 +1,4 @@
-var scrapper = function () {
+(function () {
     let name,
         image,
         video,
@@ -11,12 +11,15 @@ var scrapper = function () {
         description;
     let recipeIngredient = recipeInstructions = [];
 
-    let ld = document.querySelector('[type="application/ld+json"]');
-    if (ld !== null) {
-        let json = JSON.parse(ld.innerText)
+    let linkData = document.querySelector('[type="application/ld+json"]');
+    let hasLinkedDataRecipe = false;
+    if (linkData !== null) {
+        let json = JSON.parse(linkData.innerText)
         if (json !== undefined && json.length > 0) {
+
             json.forEach(function (recipe) {
                 if (recipe['@type'] == 'Recipe') {
+                    hasLinkedDataRecipe = true;
                     name = recipe.name;
                     image = recipe.image?.url;
                     video = recipe.video?.url;
@@ -76,7 +79,9 @@ var scrapper = function () {
         description: description,
         url: window.location.href
     }
-    if (hasSchema || ld !== null) {
+    if (hasSchema || hasLinkedDataRecipe) {
         chrome.runtime.sendMessage({ action: "getRecipe", source: recipe });
+    } else {
+        chrome.runtime.sendMessage({ action: "noRecipe" });
     }
-};
+})();

@@ -1,14 +1,49 @@
 <!DOCTYPE html>
+
 <head>
-    <link rel="stylesheet" href="mini-default.min.css">
+  <link rel="stylesheet" href="mini-default.min.css">
 </head>
 <html>
-  <body>
-    <h3>Recipe: <span id="name"></span></h3>
-    <button class="primary" id="save" disabled>Save</button>
-    <div id="spinner" class="spinner"></div>
-    <script id="embeded" src="embeded.js"></script>
-    <script src="sha1.js"></script>
-    <script src="popup.js"></script>
-  </body>
+
+<body>
+  <style type="text/css">
+    .col-sm-12 section {
+      margin: auto;
+      width: 50%;
+      text-align: center;
+    }
+
+    .icon-alert {
+      padding: 5px;
+    }
+
+    #missing section {
+      padding: 5px 0px;
+    }
+  </style>
+  <div class="container">
+    <div class="row">
+      <div id="sync" class="col-sm-12 hidden">
+        <section>
+          <span class="spinner primary"></span>
+        </section>
+        <h3>Syncing&nbsp;recipe&nbsp;to&nbsp;Github</h3>
+
+      </div>
+
+      <div id="missing" class="col-sm-12 hidden">
+        <section>
+          <span class="icon-alert secondary"></span>
+        </section>
+        <h3>No&nbsp;recipe&nbsp;schema&nbsp;found!</h3>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  <script id="client" src="client.js"></script>
+  <script src="sha1.js"></script>
+  <script src="popup.js"></script>
+</body>
+
 </html>

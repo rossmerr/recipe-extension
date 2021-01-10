@@ -1,13 +1,27 @@
-const save = document.getElementById('save');
-var recipe;
+const sync = document.getElementById('sync');
+const missing = document.getElementById('missing');
+const timeout = 3000;
 
 chrome.runtime.onMessage.addListener(function (request, sender) {
-    save.disabled = true;
     if (request.action == "getRecipe") {
-        save.disabled = false;
-        recipe = request.source;
-        let name = document.getElementById('name');
-        name.textContent = recipe.name;
+        sync.classList.toggle("hidden");
+        save(request.source);
+        setTimeout(function () {
+            sync.classList.toggle("hidden");
+            window.close();
+        }, timeout);
+
+    }
+    else if (request.action == "noRecipe") {
+        missing.classList.toggle("hidden");
+        setTimeout(function () {
+            missing.classList.toggle("hidden");
+            window.close();
+        }, timeout);
+
+    }
+    else {
+        window.close();
     }
 });
 
@@ -15,19 +29,19 @@ chrome.tabs.query({
     active: true,
     currentWindow: true
 }, tabs => {
-    let embededEle = document.getElementById('embeded');
-    fetch(embededEle.src)
+    let clientScript = document.getElementById('client');
+    fetch(clientScript.src)
         .then(response => response.text())
-        .then(data => {
+        .then(script => {
             chrome.tabs.executeScript(
                 tabs[0].id, {
-                code: data + `scrapper();`
+                code: script
             }
             );
         });
 });
 
-save.addEventListener('click', function () {
+function save(recipe) {
     let baseUrl = "https://api.github.com/repos";
     chrome.storage.local.get(function (data) {
         repo = data.repo;
@@ -35,7 +49,7 @@ save.addEventListener('click', function () {
         token = data.token;
 
         url = `${baseUrl}/${data.user}/${data.repo}/contents/content/recipes/${toPath(recipe.name)}/index.md`;
-        let markdown = toMD();
+        let markdown = toMD(recipe);
         let base64 = btoa(unescape(encodeURIComponent(markdown)));
         let sha = sha1(markdown);
 
@@ -47,7 +61,6 @@ save.addEventListener('click', function () {
         request.headers.append("accept", "application/vnd.github.v3+json");
         request.headers.append("Authorization", "token " + data.token);
 
-        busyToggle();
 
         fetch(request)
             .then(response => {
@@ -60,20 +73,11 @@ save.addEventListener('click', function () {
                 }
             })
             .then(response => {
-                busyToggle();
             }).catch(error => {
-                busyToggle();
                 alert(error);
             });
     });
-});
-
-function busyToggle() {
-    const save = document.getElementById('save');
-    const spinner = document.getElementById('spinner');
-    save.disabled = !save.disabled;
-    spinner.classList.toggle("spinner");
-}
+};
 
 function toPath(str) {
     let filename = str.toLowerCase();
@@ -89,7 +93,7 @@ function toBulletList(arr) {
     return s;
 }
 
-function toMD() {
+function toMD(recipe) {
     let date = new Date().toISOString();
     return `---
 layout: recipe

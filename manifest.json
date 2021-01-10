@@ -1,15 +1,21 @@
 {
-    "name": "Recipe Scraper",
-    "version": "1.0",
-    "description": "Download a recipe schema to markdown",
-    "permissions": ["activeTab", "declarativeContent", "storage"],
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
-    },
-    "page_action": {
-      "default_popup": "popup.html"
-    },    
-    "options_page": "options.html",
-    "manifest_version": 2
-  }
+  "name": "Recipe Schema Scraper",
+  "version": "1.0",
+  "description": "Downloads a recipe schema and commits it to Github as markdown.",
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "manifest_version": 2
+}
